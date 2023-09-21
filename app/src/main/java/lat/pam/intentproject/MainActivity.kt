@@ -6,13 +6,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-const val TEXT_REQUEST = 1
 class MainActivity : AppCompatActivity() {
     private val LOG_TAG = MainActivity::class.java.simpleName
     val EXTRA_MESSAGE = "com.example.android.twoactivities.extra.MESSAGE"
-
+    val EXTRA_REPLY = "com.example.android.twoactivities.extra.REPLY"
+    val TEXT_REQUEST = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,9 +27,22 @@ class MainActivity : AppCompatActivity() {
             val message = mMessageEditText?.text.toString()
             Log.d(LOG_TAG, message)
             intent.putExtra(EXTRA_MESSAGE, message)
-            startActivityForResult(intent, TEXT_REQUEST);
-
+            startActivityForResult(intent, TEXT_REQUEST)
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode === TEXT_REQUEST) {
+            if (resultCode === RESULT_OK) {
+                val mReplyHeadTextView = findViewById<TextView>(R.id.text_header_reply)
+                val mReplyTextView = findViewById<TextView>(R.id.text_message_reply)
+                val reply = data?.getStringExtra(EXTRA_REPLY)
+                mReplyHeadTextView.visibility = android.view.View.VISIBLE
+                mReplyTextView.text = reply
+                mReplyTextView.visibility = android.view.View.VISIBLE
+            }
+        }
 
     }
 }
